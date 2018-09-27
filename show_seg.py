@@ -19,7 +19,6 @@ from pointnet import PointNetDenseCls
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
-
 #showpoints(np.random.randn(2500,3), c1 = np.random.uniform(0,1,size = (2500)))
 
 parser = argparse.ArgumentParser()
@@ -58,11 +57,20 @@ point = point.transpose(1,0).contiguous()
 point = Variable(point.view(1, point.size()[0], point.size()[1]))
 pred, _ = classifier(point)
 pred_choice = pred.data.max(2)[1]
-print(pred_choice)
+# print(pred_choice)
 
 #print(pred_choice.size())
 pred_color = cmap[pred_choice.numpy()[0], :]
 
-#print(pred_color.shape)
-showpoints(point_np, gt, pred_color)
 
+# print(point_np.shape)
+# print(pred_color.shape)
+pred_color = pred_color*255
+pred_color = pred_color.astype(int)
+new_array = np.concatenate((point_np, pred_color), axis=1)
+# new_array = np.astype(new_array,dtype=np.float)
+# print(new_array.shape)
+
+np.savetxt('test.txt', new_array, delimiter=' ')
+#print(pred_color.shape)
+# showpoints(point_np, gt, pred_color)
